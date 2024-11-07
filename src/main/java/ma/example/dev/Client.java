@@ -3,6 +3,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIgnoreProperties({"comptes"}) // Ignorer la propriété "comptes" pendant la désérialisation
 
 public class Client {
     @JsonProperty("numClient")
@@ -26,7 +31,9 @@ public class Client {
     @JsonBackReference  // Résout la référence circulaire dans la classe Client
     private Set<Compte> comptes = new HashSet<>();
 
-
+    // Constructeur par défaut requis pour la désérialisation JSON
+    public Client() {
+    }
 
     // Constructeur avec tous les attributs
     public Client(int numClient, String nom, String prenom, String adresse, String phone, String email) {

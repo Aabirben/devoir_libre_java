@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -13,8 +15,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "numCompte")
 public class Compte {
     @JsonProperty("numCompte")
@@ -28,15 +29,17 @@ public class Compte {
 
     @JsonProperty("devise")
     private String devise;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "numCompte")
-    @JsonManagedReference  // Gère la relation avec le client
-    private Client client;
-    @JsonManagedReference  // Gère la relation avec la banque et les transactions
-    private Banque banque;
 
+    @JsonIgnore  // Ignorer la référence client
+    private Client client;
+    @JsonIgnore  // Ignorer la référence banque
+    private Banque banque;
+    @JsonIgnore  // Ignorer les transactions pour éviter la boucle
     private Set<Transaction> transactions = new HashSet<>();
 
-
+    // Constructeur par défaut
+    public Compte() {
+    }
 
     // Constructeur avec tous les attributs
     public Compte(int numCompte, LocalDateTime dateCreation, LocalDateTime dateUpdate, String devise, Client client, Banque banque) {
@@ -46,5 +49,61 @@ public class Compte {
         this.devise = devise;
         this.client = client;
         this.banque = banque;
+    }
+    // Getters et Setters
+    public int getNumCompte() {
+        return numCompte;
+    }
+
+    public void setNumCompte(int numCompte) {
+        this.numCompte = numCompte;
+    }
+
+    public LocalDateTime getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(LocalDateTime dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public LocalDateTime getDateUpdate() {
+        return dateUpdate;
+    }
+
+    public void setDateUpdate(LocalDateTime dateUpdate) {
+        this.dateUpdate = dateUpdate;
+    }
+
+    public String getDevise() {
+        return devise;
+    }
+
+    public void setDevise(String devise) {
+        this.devise = devise;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Banque getBanque() {
+        return banque;
+    }
+
+    public void setBanque(Banque banque) {
+        this.banque = banque;
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }

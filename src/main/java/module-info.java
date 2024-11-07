@@ -8,9 +8,12 @@ module ma.example.dev {
 
     // Requiert Jackson pour la sérialisation/désérialisation JSON
     requires com.fasterxml.jackson.databind;
+    requires java.base;
+    opens ma.example.dev to com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.datatype.jsr310;
+
 
     // Si vous utilisez Lombok pour la génération de code
     requires static lombok;

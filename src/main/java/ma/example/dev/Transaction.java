@@ -2,19 +2,26 @@ package ma.example.dev;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class Transaction {
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("timestamp")  // Ajout de l'annotation pour la sérialisation
     private final LocalDateTime timestamp;
 
     @JsonProperty("reference")
     private final String reference;
-
+    @JsonIgnore  // Ignorer les comptes pour éviter la boucle avec Compte
     private final Set<Compte> comptesAssocies;
+
+    @JsonProperty("type")
     private final Type type;
 
     // Constructeur avec tous les attributs, le type est calculé automatiquement
@@ -24,7 +31,14 @@ public final class Transaction {
         this.comptesAssocies = Collections.unmodifiableSet(new HashSet<>(comptesAssocies));
         this.type = calculerTypeTransaction(comptesAssocies); // Utilisation de la méthode statique
     }
-
+    // Constructeur par défaut
+    public Transaction() {
+        // Initialisation par défaut
+        this.timestamp = LocalDateTime.now(); // vous pouvez utiliser une valeur par défaut
+        this.reference = ""; // valeur par défaut
+        this.comptesAssocies = new HashSet<>(); // initialisation d'un set vide
+        this.type = Type.VIRINT; // type par défaut
+    }
     // Méthode statique pour calculer le type de transaction
     public static Type calculerTypeTransaction(Set<Compte> comptesAssocies) {
         int nombreComptes = comptesAssocies.size();
